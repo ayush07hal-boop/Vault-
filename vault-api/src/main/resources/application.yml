@@ -1,0 +1,119 @@
+server:
+  port: 8080
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      auto-offset-reset: latest
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+  application:
+    name: vault-api
+  threads:
+    virtual:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5GB
+      max-request-size: 5GB
+  datasource:
+    url: ${VAULT_DB_URL:jdbc:postgresql://localhost:5432/vault}
+    username: ${VAULT_DB_USER:vault}
+    password: ${VAULT_DB_PASSWORD:vault}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway (db/migration)
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        type:
+          preferred_instant_jdbc_type: TIMESTAMP
+  flyway:
+    enabled: true
+
+management:
+  health:
+    redis:
+      enabled: false   # optional infrastructure must not turn liveness DOWN
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+vault:
+  replication:
+    factor: 3
+  quorum:            # R + W must be > N for read/write sets to overlap
+    read: 2
+    write: 2
+    enforce-read: false
+  health:
+    heartbeat-interval-seconds: 5
+    failure-threshold: 3     # consecutive missed heartbeats before UNHEALTHY
+    recovery-threshold: 2    # consecutive good heartbeats before a returning node is trusted again
+  repair:
+    interval-seconds: 10
+    max-concurrent-tasks: 5
+    scan-limit: 1000
+    partition-guard-fraction: 0.5   # pause repair if more than this share of nodes is unreachable
+  integrity:
+    enabled: true
+    interval-seconds: 3600
+    batch-size: 200
+  rebalance:
+    enabled: true
+    interval-seconds: 300
+    threshold-percent: 80
+    min-improvement-percent: 5
+    max-moves-per-run: 10
+  storage:
+    checksum-algorithm: SHA-256
+  grpc:
+    rpc-timeout-millis: 3000
+    transfer-timeout-millis: 600000
+    max-attempts: 4          # exponential backoff: 100ms, 200ms, 400ms ...
+    base-backoff-millis: 100
+  # Local (non-Docker) layout; see application-docker.yml for container hostnames.
+  nodes:
+    - { id: node-1, host: localhost, port: 9091, zone: zone-a }
+    - { id: node-2, host: localhost, port: 9092, zone: zone-b }
+    - { id: node-3, host: localhost, port: 9093, zone: zone-c }
+    - { id: node-4, host: localhost, port: 9094, zone: zone-a }
+  # --- optional infrastructure (all off by default so the API runs standalone) ---
+  kafka:
+    enabled: false
+    node-events-topic: vault.node-events
+    repair-events-topic: vault.repair-events
+    group-id: vault-controller
+  redis:
+    enabled: false
+    lock-ttl-seconds: 600
+  rate-limit:
+    enabled: false
+    requests-per-minute: 600
+  security:
+    api-key: ${VAULT_API_KEY:}
+  user-quota:
+    bytes: ${VAULT_USER_QUOTA_BYTES:16106127360}   # per-account storage limit (default 15 GiB)
+  trash:
+    retention-days: 30            # trashed files are permanently deleted after this long
+    purge-interval-seconds: 3600
+  auth:
+    google-client-id: ${VAULT_GOOGLE_CLIENT_ID:}   # OAuth 2.0 Web client ID from Google Cloud Console
+    dev-login: false                               # true = sign in with any email, no Google (demos only)
+  admin:
+    emails: ${VAULT_ADMIN_EMAILS:}                 # comma-separated allowlist of admin Google accounts
+    password: ${VAULT_ADMIN_PASSWORD:}             # blank = random password printed in the startup log
+    token-secret: ${VAULT_TOKEN_SECRET:}           # blank = random per start (sessions end on restart)
+    admin-token-ttl-minutes: 480
+    user-token-ttl-minutes: 720
+  cors:
+    allowed-origins: ${VAULT_CORS_ORIGINS:http://localhost:3000,http://localhost:5173}

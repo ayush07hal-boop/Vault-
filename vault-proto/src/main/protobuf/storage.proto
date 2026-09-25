@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package vault.storage.v1;
+
+option java_multiple_files = true;
+option java_package = "com.vault.proto";
+option java_outer_classname = "StorageProto";
+
+// Internal contract between the Vault controller and storage nodes.
+// Objects on a node are addressed by (object_id, version); a node never decides
+// replication policy - that belongs to the controller.
+service StorageNodeService {
+  // Client-streaming upload: first message is the header, the rest are chunks.
+  rpc PutObject(stream PutObjectRequest) returns (PutObjectResponse);
+  // Server-streaming download. NOT_FOUND if the (object_id, version) is absent.
+  rpc GetObject(GetObjectRequest) returns (stream GetObjectResponse);
+  // Idempotent. version == 0 removes every version of the object.
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse);
+  // Re-reads the object from disk and recomputes its SHA-256.
+  rpc VerifyObject(VerifyObjectRequest) returns (VerifyObjectResponse);
+  // The target node pulls the object directly from a source node, verifies the
+  // checksum, and only then atomically publishes it.
+  rpc CopyReplica(CopyReplicaRequest) returns (CopyReplicaResponse);
+  rpc CheckHealth(HealthRequest) returns (HealthResponse);
+}
+
+message PutObjectRequest {
+  oneof payload {
+    PutHeader header = 1;
+    bytes chunk = 2;
+  }
+}
+
+message PutHeader {
+  string object_id = 1;
+  int64 version = 2;
+  // Optional. When set the node rejects the write (DATA_LOSS) on mismatch.
+  string expected_checksum = 3;
+}
+
+message PutObjectResponse {
+  string checksum = 1;
+  int64 size = 2;
+}
+
+message GetObjectRequest {
+  string object_id = 1;
+  int64 version = 2;
+}
+
+message GetObjectResponse {
+  bytes chunk = 1;
+}
+
+message DeleteObjectRequest {
+  string object_id = 1;
+  int64 version = 2;
+}
+
+message DeleteObjectResponse {
+  bool deleted = 1;
+}
+
+message VerifyObjectRequest {
+  string object_id = 1;
+  int64 version = 2;
+}
+
+message VerifyObjectResponse {
+  bool exists = 1;
+  string checksum = 2;
+  int64 size = 3;
+}
+
+message CopyReplicaRequest {
+  string object_id = 1;
+  int64 version = 2;
+  string source_host = 3;
+  int32 source_port = 4;
+  string expected_checksum = 5;
+}
+
+message CopyReplicaResponse {
+  string checksum = 1;
+  int64 size = 2;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string node_id = 1;
+  bool healthy = 2;
+  int64 total_capacity = 3;
+  int64 used_capacity = 4;
+  int64 object_count = 5;
+}

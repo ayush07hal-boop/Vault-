@@ -1,0 +1,115 @@
+# Vault cluster: 1 controller (API), 4 independent storage nodes, PostgreSQL for metadata.
+# Simulate failures with:  docker compose stop storage-node-2
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: vault
+      POSTGRES_USER: vault
+      POSTGRES_PASSWORD: vault
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault -d vault"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+
+  kafka:
+    image: apache/kafka:3.8.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  storage-node-1: &storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
+    environment:
+      NODE_ID: node-1
+      NODE_CAPACITY_BYTES: "10737418240"   # 10 GiB
+    volumes:
+      - node1:/data
+  storage-node-2:
+    <<: *storage-node
+    environment:
+      NODE_ID: node-2
+      NODE_CAPACITY_BYTES: "10737418240"
+    volumes:
+      - node2:/data
+  storage-node-3:
+    <<: *storage-node
+    environment:
+      NODE_ID: node-3
+      NODE_CAPACITY_BYTES: "10737418240"
+    volumes:
+      - node3:/data
+  storage-node-4:
+    <<: *storage-node
+    environment:
+      NODE_ID: node-4
+      NODE_CAPACITY_BYTES: "10737418240"
+    volumes:
+      - node4:/data
+
+  vault-api:
+    build:
+      context: .
+      dockerfile: vault-api/Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      VAULT_DB_USER: vault
+      VAULT_DB_PASSWORD: vault
+      # from .env (docker compose reads it automatically)
+      VAULT_GOOGLE_CLIENT_ID: ${VAULT_GOOGLE_CLIENT_ID:-}
+      VAULT_ADMIN_EMAILS: ${VAULT_ADMIN_EMAILS:-}
+      VAULT_ADMIN_PASSWORD: ${VAULT_ADMIN_PASSWORD:-}
+      VAULT_AUTH_DEVLOGIN: ${VAULT_AUTH_DEVLOGIN:-false}
+      VAULT_TOKEN_SECRET: ${VAULT_TOKEN_SECRET:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+      storage-node-1:
+        condition: service_started
+      storage-node-2:
+        condition: service_started
+      storage-node-3:
+        condition: service_started
+      storage-node-4:
+        condition: service_started
+
+volumes:
+  pgdata:
+  node1:
+  node2:
+  node3:
+  node4:

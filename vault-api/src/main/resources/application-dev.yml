@@ -1,0 +1,15 @@
+# In-memory H2 (PostgreSQL mode) so the API runs without a database server. Data is lost on restart.
+spring:
+  datasource:
+    url: jdbc:h2:mem:vault;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+
+# LOCAL DEMO ONLY: sign in with any email (no Google), fixed admin password, one allowlisted admin email.
+# Never use these settings in production.
+vault:
+  auth:
+    dev-login: true
+  admin:
+    emails: admin@vault.local
+    password: admin

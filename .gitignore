@@ -1,0 +1,13 @@
+target/
+data/
+*.iml
+.idea/
+.vscode/
+*.log
+
+node_modules/
+dist/
+
+# secrets: never commit the real .env (the .env.example template is committed)
+.env
+!.env.example

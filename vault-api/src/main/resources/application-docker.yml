@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/vault
+  kafka:
+    bootstrap-servers: kafka:9092
+  data:
+    redis:
+      host: redis
+
+management:
+  health:
+    redis:
+      enabled: true
+
+vault:
+  kafka:
+    enabled: true
+  redis:
+    enabled: true
+  rate-limit:
+    enabled: true
+  nodes:
+    - { id: node-1, host: storage-node-1, port: 9090, zone: zone-a }
+    - { id: node-2, host: storage-node-2, port: 9090, zone: zone-b }
+    - { id: node-3, host: storage-node-3, port: 9090, zone: zone-c }
+    - { id: node-4, host: storage-node-4, port: 9090, zone: zone-a }
