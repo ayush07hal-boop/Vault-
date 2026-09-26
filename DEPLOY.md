@@ -1,5 +1,7 @@
 # Deploying Vault
 
+> **Recommended (free, always on, permanent address): [DEPLOY-ORACLE.md](DEPLOY-ORACLE.md).** The Render option below costs about $25/month.
+
 Vault has two parts, deployed separately:
 
 | Part | Where | Why |

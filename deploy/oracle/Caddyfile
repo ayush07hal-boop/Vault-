@@ -1,0 +1,19 @@
+# Automatic HTTPS (Let's Encrypt) for {$DOMAIN}. Only the API is exposed; metrics/health endpoints stay internal.
+{$DOMAIN} {
+	encode gzip
+
+	handle /api/* {
+		reverse_proxy vault-api:8080 {
+			# large uploads: do not time out slow connections
+			transport http {
+				response_header_timeout 15m
+				read_timeout 15m
+				write_timeout 15m
+			}
+		}
+	}
+
+	handle {
+		respond "Vault API" 200
+	}
+}

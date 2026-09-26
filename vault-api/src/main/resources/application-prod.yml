@@ -1,0 +1,17 @@
+# Production profile for the Docker deployment (deploy/oracle/docker-compose.yml):
+# PostgreSQL for metadata, four storage-node containers on the internal Docker network, behind a Caddy proxy.
+# Database, secrets and CORS come from environment variables (see deploy/oracle/.env.example).
+server:
+  # Caddy terminates HTTPS in front of the API; trust its X-Forwarded-* headers so per-client rate limits and
+  # login throttling see real client addresses, not the proxy's.
+  forward-headers-strategy: native
+
+vault:
+  rate-limit:
+    enabled: true
+    requests-per-minute: 600
+  nodes:
+    - { id: node-1, host: storage-node-1, port: 9090, zone: zone-a }
+    - { id: node-2, host: storage-node-2, port: 9090, zone: zone-b }
+    - { id: node-3, host: storage-node-3, port: 9090, zone: zone-c }
+    - { id: node-4, host: storage-node-4, port: 9090, zone: zone-a }

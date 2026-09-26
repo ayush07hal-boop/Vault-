@@ -10,6 +10,10 @@ Client ──REST──▶ vault-api (Spring Boot controller)  ──gRPC──�
                     └─ background: health monitor · repair queue+workers · integrity scrubber · rebalancer
 ```
 
+## Deploying
+
+Free, always-on hosting on an Oracle Cloud VM (permanent HTTPS address, Vercel for the website): see [DEPLOY-ORACLE.md](DEPLOY-ORACLE.md). Other options: [DEPLOY.md](DEPLOY.md).
+
 ## Frontend
 
 React + Vite app in [`frontend/`](frontend/README.md): `cd frontend && npm install && npm run dev` (needs the backend on :8080).

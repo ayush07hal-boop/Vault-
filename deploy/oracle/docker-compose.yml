@@ -1,0 +1,91 @@
+# Vault on a single Linux VM (Oracle Cloud Always Free, or any Docker host).
+# Public entry point: Caddy on ports 80/443 (automatic HTTPS). Everything else stays on the internal network.
+name: vault
+
+x-storage-node: &storage-node
+  build:
+    context: ../..
+    dockerfile: storage-node/Dockerfile
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vault
+      POSTGRES_USER: vault
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vault -d vault"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  storage-node-1:
+    <<: *storage-node
+    environment: { NODE_ID: node-1, NODE_CAPACITY_BYTES: "${NODE_CAPACITY_BYTES:-8589934592}" }
+    volumes: [ "node1:/data" ]
+  storage-node-2:
+    <<: *storage-node
+    environment: { NODE_ID: node-2, NODE_CAPACITY_BYTES: "${NODE_CAPACITY_BYTES:-8589934592}" }
+    volumes: [ "node2:/data" ]
+  storage-node-3:
+    <<: *storage-node
+    environment: { NODE_ID: node-3, NODE_CAPACITY_BYTES: "${NODE_CAPACITY_BYTES:-8589934592}" }
+    volumes: [ "node3:/data" ]
+  storage-node-4:
+    <<: *storage-node
+    environment: { NODE_ID: node-4, NODE_CAPACITY_BYTES: "${NODE_CAPACITY_BYTES:-8589934592}" }
+    volumes: [ "node4:/data" ]
+
+  vault-api:
+    build:
+      context: ../..
+      dockerfile: vault-api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      storage-node-1: { condition: service_started }
+      storage-node-2: { condition: service_started }
+      storage-node-3: { condition: service_started }
+      storage-node-4: { condition: service_started }
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      VAULT_DB_URL: jdbc:postgresql://postgres:5432/vault
+      VAULT_DB_USER: vault
+      VAULT_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      VAULT_GOOGLE_CLIENT_ID: ${VAULT_GOOGLE_CLIENT_ID}
+      VAULT_ADMIN_EMAILS: ${VAULT_ADMIN_EMAILS}
+      VAULT_ADMIN_PASSWORD: ${VAULT_ADMIN_PASSWORD}
+      VAULT_TOKEN_SECRET: ${VAULT_TOKEN_SECRET}
+      VAULT_CORS_ORIGINS: ${VAULT_CORS_ORIGINS}
+      VAULT_AUTH_DEVLOGIN: "false"
+      VAULT_USER_QUOTA_BYTES: ${VAULT_USER_QUOTA_BYTES:-4294967296}
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - vault-api
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  node1:
+  node2:
+  node3:
+  node4:
+  caddy_data:
+  caddy_config:
