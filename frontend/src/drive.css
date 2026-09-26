@@ -274,3 +274,7 @@ body { -webkit-font-smoothing: antialiased; }
 }
 
 .nav-logo.solo { border-right: 0; margin-right: 0; padding-right: 0; }
+
+/* logo mark (replaces the old square "V" badge) */
+.logo { display: block; flex-shrink: 0; overflow: visible; transition: transform .25s cubic-bezier(.2, .8, .2, 1), filter .25s ease; }
+.nav-logo:hover .logo { transform: translateY(-2px) scale(1.06); filter: drop-shadow(0 4px 8px rgba(229, 20, 28, .35)); }

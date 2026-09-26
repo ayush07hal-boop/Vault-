@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Logo from './Logo';
 import { Link, NavLink, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { useDrive } from '../drive';
@@ -136,7 +137,7 @@ export default function DriveShell() {
       <header className="main-nav">
         <div className="main-nav-inner">
           <Link to="/" className={`nav-logo ${signedIn ? '' : 'solo'}`} onClick={() => setSearch('')}>
-            <span className="brand-mark">V</span>
+            <Logo size={42} />
             <span>Vault</span>
           </Link>
 

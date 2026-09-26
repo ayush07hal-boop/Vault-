@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Logo from '../components/Logo';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 
@@ -35,7 +36,7 @@ export default function AdminLogin() {
     <div className="login-page">
       <form className="card login-card" onSubmit={submit}>
         <div className="brand" style={{ padding: 0, marginBottom: 6 }}>
-          <span className="brand-mark">V</span> Vault
+          <Logo size={34} /> Vault
         </div>
         <h1>Admin access</h1>
         <p className="muted" style={{ margin: '4px 0 18px' }}>

@@ -1,4 +1,5 @@
 import { Link, NavLink, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import Logo from './components/Logo';
 import { AuthProvider, RequireAdmin, useAuth } from './auth';
 import DriveShell from './components/DriveShell';
 import { ToastProvider } from './components/ui';
@@ -46,7 +47,7 @@ function AdminLayout() {
   return (
     <div className="app">
       <nav className="sidebar">
-        <div className="brand"><span className="brand-mark">V</span> Vault <span className="pill">Admin</span></div>
+        <div className="brand"><Logo size={30} /> Vault <span className="pill">Admin</span></div>
         {ADMIN_NAV.map(([to, label, icon, end]) => (
           <NavLink key={to} to={to} end={end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <span>{icon}</span> {label}
