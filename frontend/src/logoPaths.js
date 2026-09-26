@@ -37,5 +37,5 @@ export const DEPTH = 2.6; // extrusion offset in viewBox units
 /** Gradient stops shared by the component and the favicon. */
 export const PALETTE = {
   red: { top: '#ff6b6f', mid: '#e5141c', bottom: '#7d060b', side: '#4d0308' },
-  black: { top: '#7385ee', mid: '#3247b8', bottom: '#141d63', side: '#0c1244' },
+  black: { top: '#5b5b68', mid: '#22222a', bottom: '#050507', side: '#000000' },
 };

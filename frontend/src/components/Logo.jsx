@@ -26,7 +26,7 @@ export default function Logo({ size = 32, title = 'Vault', className = '' }) {
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
         <filter id={`${uid}-shadow`} x="-20%" y="-20%" width="140%" height="150%">
-          <feDropShadow dx="0" dy="3" stdDeviation="2.4" floodColor="#1a2466" floodOpacity=".32" />
+          <feDropShadow dx="0" dy="3" stdDeviation="2.4" floodColor="#000" floodOpacity=".32" />
         </filter>
       </defs>
 
