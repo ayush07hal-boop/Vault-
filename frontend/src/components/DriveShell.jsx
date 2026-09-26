@@ -7,7 +7,6 @@ import { Icon } from '../icons';
 import { formatSize } from '../utils';
 import { ProjectDialog } from '../pages/ProjectsView';
 import { MenuItem, Popover } from './DriveUi';
-import SignIn from './SignIn';
 
 const NAV = [
   ['/', 'Storage'],
@@ -165,9 +164,8 @@ export default function DriveShell() {
 
           <div className="nav-actions">
             <NavSearch />
-            {guest || !user ? (
-              <SignIn />
-            ) : (
+            {/* signed out: nothing here; sign-in lives in the page hero */}
+            {!guest && user && (
               <>
                 <button className="pill-outline" onClick={() => setNewProject(true)}>New project</button>
                 <button className="pill-ink" onClick={() => openUpload([], inProject?.params.projectId)}>
