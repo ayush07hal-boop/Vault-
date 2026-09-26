@@ -119,8 +119,8 @@ public record VaultProperties(
         }
     }
 
-    /** Storage each account may use (15 GiB by default). Uploads beyond it are refused with 507. */
-    public record UserQuota(@DefaultValue("16106127360") long bytes) {
+    /** Storage each account may use (4 GiB by default). Uploads beyond it are refused with 507. */
+    public record UserQuota(@DefaultValue("4294967296") long bytes) {
     }
 
     /** Trashed files are permanently deleted after this many days. */

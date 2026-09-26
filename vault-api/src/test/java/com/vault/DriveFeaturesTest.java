@@ -139,7 +139,7 @@ class DriveFeaturesTest extends AbstractClusterTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.usedBytes").value(1750)) // trash still occupies space
                 .andExpect(jsonPath("$.fileCount").value(3))
-                .andExpect(jsonPath("$.quotaBytes").value(16106127360L))
+                .andExpect(jsonPath("$.quotaBytes").value(4294967296L))
                 .andExpect(jsonPath("$.bytesByType.pdf").value(1000))
                 .andExpect(jsonPath("$.bytesByType.image").value(750));
     }

@@ -102,7 +102,7 @@ vault:
   security:
     api-key: ${VAULT_API_KEY:}
   user-quota:
-    bytes: ${VAULT_USER_QUOTA_BYTES:16106127360}   # per-account storage limit (default 15 GiB)
+    bytes: ${VAULT_USER_QUOTA_BYTES:4294967296}    # per-account storage limit (default 4 GiB)
   trash:
     retention-days: 30            # trashed files are permanently deleted after this long
     purge-interval-seconds: 3600
