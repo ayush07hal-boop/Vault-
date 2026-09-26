@@ -86,6 +86,8 @@ export default function DriveShell() {
   const inProject = useMatch('/projects/:projectId');
   const [newProject, setNewProject] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Section links (Storage, Recent, ...) exist only for signed-in users; visitors just see the Vault logo and sign-in.
+  const signedIn = !guest && !!user;
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
@@ -133,15 +135,18 @@ export default function DriveShell() {
 
       <header className="main-nav">
         <div className="main-nav-inner">
-          <Link to="/" className="nav-logo" onClick={() => setSearch('')}>
+          <Link to="/" className={`nav-logo ${signedIn ? '' : 'solo'}`} onClick={() => setSearch('')}>
             <span className="brand-mark">V</span>
             <span>Vault</span>
           </Link>
 
+          {signedIn && (
           <button className="icon-btn nav-toggle" onClick={() => setMenuOpen((o) => !o)} aria-label="Menu" aria-expanded={menuOpen}>
             <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
           </button>
+          )}
 
+          {signedIn && (
           <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
             {NAV.map(([to, label], i) => (
               <NavLink
@@ -155,6 +160,7 @@ export default function DriveShell() {
               </NavLink>
             ))}
           </nav>
+          )}
 
           <div className="nav-actions">
             <NavSearch />

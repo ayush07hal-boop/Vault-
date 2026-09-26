@@ -272,3 +272,5 @@ body { -webkit-font-smoothing: antialiased; }
   .file-actions, .file-head > :last-child { display: none; }
   .upload-panel { right: 8px; left: 8px; width: auto; }
 }
+
+.nav-logo.solo { border-right: 0; margin-right: 0; padding-right: 0; }
