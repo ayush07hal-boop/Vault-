@@ -1,5 +1,5 @@
 // Thin client for the Vault REST API. All calls send X-API-Key when one is saved in Settings.
-const BASE = import.meta.env.VITE_API_URL || '';
+const BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 export class ApiError extends Error {
   constructor(status, code, message) {
