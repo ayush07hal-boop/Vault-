@@ -10,7 +10,7 @@ body { -webkit-font-smoothing: antialiased; }
 /* ---- dark utility bar ---- */
 .utility-bar { background: var(--nav-dark); color: var(--nav-dark-text); font-size: 14px; }
 .utility-inner { max-width: 1240px; margin: 0 auto; padding: 0 32px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
-.utility-tag { color: #c9d1f5; font-size: 13px; }
+.utility-tag { color: #fff; font-size: 13px; }
 .utility-links { display: flex; align-items: center; gap: 22px; }
 .utility-link { display: inline-flex; align-items: center; gap: 8px; color: var(--nav-dark-text); font-weight: 500; background: none; border: 0; padding: 4px 0; border-radius: 0; }
 .utility-link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; background: none; border: 0; }

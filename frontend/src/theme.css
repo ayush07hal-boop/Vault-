@@ -8,20 +8,22 @@
   --surface: #ffffff;       /* panels, cards */
   --surface-2: #f3f3f7;     /* table headers, inputs, hover */
   --border: #e2e2ea;
-  --text: #3247b8;          /* brand blue (replaces black) */
+  --brand: 50, 71, 184;      /* brand blue as r, g, b so its opacity can be tuned in one place */
+  --brand-alpha: .5;         /* opacity of the brand blue used for text, buttons and bars */
+  --text: rgba(var(--brand), var(--brand-alpha));
   --text-muted: #5a6690;
 
-  --nav-dark: #3247b8;      /* top utility bar */
+  --nav-dark: rgba(var(--brand), var(--brand-alpha)); /* top utility bar */
   --nav-dark-text: #ffffff;
-  --ink: #3247b8;           /* primary pill buttons: brand blue */
-  --ink-hover: #263890;
+  --ink: rgba(var(--brand), var(--brand-alpha)); /* primary pill buttons: brand blue */
+  --ink-hover: rgba(var(--brand), .68);
   --orange: #ff9900;        /* brand accent (active nav underline, highlights) */
   --hero-gradient: linear-gradient(100deg, #f7f7ff 0%, #e6e8ff 45%, #cfd5ff 100%);
 
   --primary: #006ce0;       /* links, focus, progress */
   --primary-contrast: #ffffff;
   --selected: #e6ecff;      /* selected option / active filter */
-  --selected-text: #3247b8;
+  --selected-text: rgba(var(--brand), var(--brand-alpha));
   --search-bg: #f3f3f7;
 
   --success: #037f0c;       /* HEALTHY / UP */
