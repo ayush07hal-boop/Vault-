@@ -8,13 +8,13 @@
   --surface: #ffffff;       /* panels, cards */
   --surface-2: #f3f3f7;     /* table headers, inputs, hover */
   --border: #e2e2ea;
-  --text: #161d26;          /* AWS squid ink */
+  --text: #2b3644;          /* softened squid ink */
   --text-muted: #5f6b7a;
 
-  --nav-dark: #161d26;      /* top utility bar */
+  --nav-dark: #2c3745;      /* top utility bar */
   --nav-dark-text: #ffffff;
-  --ink: #161d26;           /* primary pill buttons */
-  --ink-hover: #2d3643;
+  --ink: #34414f;           /* primary pill buttons (softened) */
+  --ink-hover: #465567;
   --orange: #ff9900;        /* brand accent (active nav underline, highlights) */
   --hero-gradient: linear-gradient(100deg, #f7f7ff 0%, #e6e8ff 45%, #cfd5ff 100%);
 
@@ -154,7 +154,7 @@ th:last-child { border-top-right-radius: 8px; }
 .upload-item .bar { flex: 1; }
 
 /* drawer */
-.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); z-index: 40; display: flex; justify-content: flex-end; }
+.overlay { position: fixed; inset: 0; background: rgba(22, 29, 38, .32); z-index: 40; display: flex; justify-content: flex-end; }
 .drawer { width: min(560px, 100%); height: 100%; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; overflow-y: auto; }
 .modal { margin: auto; width: min(440px, 92%); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
 .overlay.center { justify-content: center; align-items: center; }

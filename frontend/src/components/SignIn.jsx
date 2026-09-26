@@ -57,7 +57,7 @@ export default function SignIn({ large = false }) {
           },
         });
         google.accounts.id.renderButton(buttonRef.current, large
-          ? { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'pill' }
+          ? { theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill' }
           : { theme: 'outline', size: 'medium', text: 'signin_with', shape: 'pill' });
       })
       .catch((e) => !cancelled && setFailed(e.message));
