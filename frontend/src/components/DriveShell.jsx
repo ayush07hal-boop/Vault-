@@ -105,7 +105,6 @@ export default function DriveShell() {
                     {formatSize(usage.usedBytes)} of {formatSize(usage.quotaBytes)}
                   </Link>
                 )}
-                <Link to="/settings" className="utility-link">Connection</Link>
                 {user.canAdmin && <Link to="/admin" className="utility-link">Admin</Link>}
                 <Popover
                   align="right"
@@ -124,7 +123,6 @@ export default function DriveShell() {
                     <div className="muted">{user.email}</div>
                   </div>
                   {user.canAdmin && <MenuItem icon="shield" onClick={() => navigate('/admin')}>Admin area</MenuItem>}
-                  <MenuItem icon="settings" onClick={() => navigate('/settings')}>Connection settings</MenuItem>
                   <MenuItem icon="logout" onClick={() => { signOut(); navigate('/'); }}>Sign out</MenuItem>
                 </Popover>
               </>

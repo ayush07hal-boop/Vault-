@@ -18,7 +18,7 @@ to configure. To call a backend on another origin, set `VITE_API_URL` (the backe
 `VAULT_CORS_ORIGINS`). `npm run build` produces `dist/`.
 
 Everyone signs in first (Google, or dev sign-in when the backend runs the `dev` profile). The **Admin** link only appears for allowlisted accounts; see the root README ("Accounts", "Admin").
-If the backend runs with `VAULT_API_KEY`, enter the key under **Connection**.
+The optional gateway key (`VAULT_API_KEY`, off by default) has no screen in the UI any more; if you enable it, save the key in the browser with `localStorage.setItem("vault.apiKey", "<key>")`.
 
 ## Screens
 
@@ -36,7 +36,6 @@ The signed-in interface follows Google Drive's layout (light theme, Google Sans)
 | `/admin/nodes` | Node cards with status, capacity, last heartbeat, plain-language explanation of each state |
 | `/admin/operations` | Trigger health check, repair scan, integrity verification, rebalance |
 | Navbar (signed out) | "Sign in with Google" button (dev email sign-in in the dev profile) |
-| `/settings` | API key (gateway) |
 | `/admin/login` | Admin password step, allowlisted accounts only |
 
 ## Structure

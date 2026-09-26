@@ -13,7 +13,6 @@ import Nodes from './pages/Nodes';
 import Objects from './pages/Objects';
 import Operations from './pages/Operations';
 import ProjectsView from './pages/ProjectsView';
-import Settings from './pages/Settings';
 
 /** Everyone lands in the Drive-style interface; signed-out visitors get a guest version of it. */
 function SiteLayout() {
@@ -78,7 +77,6 @@ export default function App() {
             <Route path="/projects" element={<Private title="Projects" icon="projects"><ProjectsView /></Private>} />
             <Route path="/projects/:projectId" element={<Private title="Projects" icon="projects"><FilesView mode="project" /></Private>} />
             <Route path="/computers" element={<Private title="Computers" icon="computer"><ComputersView /></Private>} />
-            <Route path="/settings" element={<Private title="Connection"><div className="container page-body"><Settings /></div></Private>} />
           </Route>
 
           <Route path="/admin/login" element={<AdminLogin />} />
