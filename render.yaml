@@ -1,4 +1,4 @@
-# Render blueprint: one web service running the whole backend (API + 4 storage nodes + embedded database).
+# Render blueprint (FREE plan, demo): one web service running API + 4 storage nodes + embedded database. Data is ephemeral.
 # Render dashboard -> New -> Blueprint -> pick this repo. Fill in the four secrets when prompted.
 services:
   - type: web
@@ -6,12 +6,10 @@ services:
     runtime: docker
     dockerfilePath: ./deploy/Dockerfile.demo
     dockerContext: .
-    plan: standard              # 2 GB RAM (~$25/month). The stack needs ~450 MB, so the 512 MB "starter" plan is too tight.
+    plan: free                  # 512 MB RAM, no disk (data is lost on restart), sleeps after 15 min idle. Use "standard" + the disk below for real use.
     healthCheckPath: /actuator/health
-    disk:
-      name: vault-data
-      mountPath: /data
-      sizeGB: 1
+    # disk is not available on the free plan; on a paid plan add:
+    # disk: { name: vault-data, mountPath: /data, sizeGB: 1 }
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: demo
