@@ -1,0 +1,27 @@
+# Render blueprint: one web service running the whole backend (API + 4 storage nodes + embedded database).
+# Render dashboard -> New -> Blueprint -> pick this repo. Fill in the four secrets when prompted.
+services:
+  - type: web
+    name: vault-api
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile.demo
+    dockerContext: .
+    plan: standard              # 2 GB RAM (~$25/month). The stack needs ~450 MB, so the 512 MB "starter" plan is too tight.
+    healthCheckPath: /actuator/health
+    disk:
+      name: vault-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: demo
+      - key: VAULT_GOOGLE_CLIENT_ID
+        sync: false
+      - key: VAULT_ADMIN_EMAILS
+        sync: false
+      - key: VAULT_ADMIN_PASSWORD
+        sync: false
+      - key: VAULT_CORS_ORIGINS      # your Vercel URL, e.g. https://vault-yourname.vercel.app
+        sync: false
+      - key: VAULT_TOKEN_SECRET
+        generateValue: true

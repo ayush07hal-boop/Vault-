@@ -1,0 +1,16 @@
+# Single-machine deployment (used by deploy/Dockerfile.demo): API + 4 storage nodes + an embedded file database,
+# all persisted under /data. Metadata and file bytes live on the same disk, so they stay consistent together.
+spring:
+  datasource:
+    url: jdbc:h2:file:${DATA_DIR:/data}/meta/vault;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password: ""
+
+vault:
+  user-quota:
+    bytes: 104857600          # 100 MB per account (small disk)
+  nodes:
+    - { id: node-1, host: localhost, port: 9091, zone: zone-a }
+    - { id: node-2, host: localhost, port: 9092, zone: zone-b }
+    - { id: node-3, host: localhost, port: 9093, zone: zone-c }
+    - { id: node-4, host: localhost, port: 9094, zone: zone-a }

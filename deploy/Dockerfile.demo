@@ -1,0 +1,18 @@
+# Build from the repository root:  docker build -f deploy/Dockerfile.demo -t vault-demo .
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /src
+COPY pom.xml .
+COPY vault-proto/ vault-proto/
+COPY storage-node/ storage-node/
+COPY vault-api/ vault-api/
+RUN mvn -q -B -pl vault-api,storage-node -am package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /src/storage-node/target/storage-node-*-shaded.jar /app/storage-node.jar
+COPY --from=build /src/vault-api/target/vault-api-*.jar /app/vault-api.jar
+COPY deploy/start.sh /app/start.sh
+RUN chmod +x /app/start.sh && mkdir -p /data
+VOLUME /data
+EXPOSE 8080
+ENTRYPOINT ["/app/start.sh"]
