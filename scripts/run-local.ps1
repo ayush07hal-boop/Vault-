@@ -42,5 +42,11 @@ $pids = @()
 $pids | Set-Content "$root\data\nodes.pids"
 Write-Host "started storage nodes (pids: $($pids -join ', '))"
 
-Write-Host "starting API on http://localhost:8080 ..."
-& java "-Dspring.profiles.active=dev" -jar $apiJar
+if ($env:VAULT_DB_URL) {
+    # PostgreSQL configured in .env: metadata survives restarts (no "dev" profile, settings come from .env)
+    Write-Host "starting API on http://localhost:8080 (metadata in PostgreSQL) ..."
+    & java -jar $apiJar
+} else {
+    Write-Host "starting API on http://localhost:8080 (in-memory database: data is lost on restart) ..."
+    & java "-Dspring.profiles.active=dev" -jar $apiJar
+}
